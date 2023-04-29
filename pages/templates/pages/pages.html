@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Pages{% endblock %}
+{% load static %}
+{% block content %}
+<div id="banner">
+   <div class="banner_image banner_image_pages"></div>
+   <h1 class="text-center banner_text text-white user-select-none">Pages</h1>
+</div>
+<div class="container mt-4">
+   <div class="d-flex mb-4">
+      <div class="dropdown me-auto">
+         <button class="btn btn-lg btn-outline-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+         Sort
+         </button>
+         <ul class="dropdown-menu">
+            <li><a href="{% url 'pages:pages' %}?order_by=name" class="dropdown-item">Name</a></li>
+            <li><a href="{% url 'pages:pages' %}?order_by=-pk" class="dropdown-item">New First</a></li>
+            <li><a href="{% url 'pages:pages' %}?order_by=pk" class="dropdown-item">Old First</a></li>
+            <li><a href="{% url 'pages:pages' %}?order_by=-average_rating" class="dropdown-item">Highest Rating</a></li>
+            <li><a href="{% url 'pages:pages' %}?order_by=average_rating" class="dropdown-item">Lowest Rating</a></li>
+         </ul>
+      </div>
+      <form method="GET" action="{% url 'pages:pages' %}" class="input-group w-25">
+         <input type="text" name="filter_val" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="button-addon2">
+         <button class="btn btn-dark" type="submit" id="button-addon2"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+      </form>
+   </div>
+   {% if pages.count == 0 %}
+   <h3 class="text-center mt-5">No pages found.</h3>
+   {% endif %}
+   <div class="row">
+      {% for page in pages %}
+      <div class="col-lg-4 text-center">
+         <a href="{{ page.get_absolute_url }}" class="card_image_link text-decoration-none">
+         <img src="{{ page.image.url }}" class="card_image">
+         </a>
+         <h2 class="fw-normal">{{ page.name }}</h2>
+         <p>{{ page.description|striptags|truncatechars:40 }}</p>
+         <p><a class="btn btn-primary" href="{{ page.get_absolute_url }}">View details</a></p>
+      </div>
+      {% endfor %}
+   </div>
+</div>
+{% if page_obj.paginator.num_pages > 1 %}
+<!-- Pagination -->
+<nav aria-label="Page navigation example page_navigation">
+   <ul class="pagination justify-content-center mt-5 mb-5">
+      <li class="page-item {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
+         <a class="page-link" href="?page=1" aria-label="First">
+         <span aria-hidden='true'>&laquo;</span>
+         </a>
+      </li>
+      {% for page in page_obj.paginator.page_range %}
+      <li class="page-item {% if page == page_obj.number %} active {% endif %}"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+      {% endfor %}
+      <li class="page-item {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
+         <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+         <span aria-hidden="true">&raquo;</span>
+         </a>
+      </li>
+   </ul>
+</nav>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}My Ratings{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="grey_container">
+  <div class="container">
+    <div class="bd-masthead mt-5" id="content">
+
+      {% if qs_count == 0 %}
+      <div class='text-center'>
+        <h1 class="mb-4">You haven't rated anything yet</h1>
+      </div>
+      {% else %}
+      <h2 class="text-center">You have {{ qs_count }} rating{{ qs_count|pluralize }}</h2>
+      {% endif %}
+
+      <div class="list-group mb-5 mt-5">
+        {% for rating in ratings %}
+        <a href="{{ rating.page.get_absolute_url }}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-middle">
+            <img src="{{ rating.page.image.url }}" width="60" height="60" class="me-3">
+            <div class="me-auto">
+              <h5 class="mb-1 mt-1">{{ rating.page.name }}</h5>
+              <small class="text-muted">{{ rating.date }}</small>
+            </div>
+            {% if rating.user_favorite %}
+              <form method="POST" action="{% url 'user_favorites:unlike_page' rating.page.slug %}"> {% csrf_token %}
+                <button class="btn heart_ratings text-secondary me-2" type="submit"><i class="fa-solid text-danger fa-heart"></i></button>
+              </form>
+            {% else %}
+              <form method="POST" action="{% url 'user_favorites:like_page' rating.page.slug %}"> {% csrf_token %}
+                <button class="btn heart_ratings text-secondary me-2" type="submit"><i class="fa-regular fa-heart"></i></button>
+              </form>
+            {% endif %}
+            <h4 class="mt-1"><span class="my_rate_badge badge rounded-pill bg-orange">{{ rating.rating }}</span></h4>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

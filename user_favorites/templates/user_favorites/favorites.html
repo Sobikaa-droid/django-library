@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}My Ratings{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="grey_container">
+  <div class="container">
+    <div class="bd-masthead mt-5" id="content">
+
+      {% if qs_count == 0 %}
+      <div class='text-center'>
+        <h1 class="mb-4">You haven't liked anything yet</h1>
+      </div>
+      {% else %}
+      <h2 class="text-center">You have {{ qs_count }} favorite{{ qs_count|pluralize }}</h2>
+      {% endif %}
+
+      <div class="list-group mb-5 mt-5">
+        {% for fav in favorites %}
+        <a href="{{ fav.page.get_absolute_url }}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-middle">
+            <img src="{{ fav.page.image.url }}" width="60" height="60" class="me-3">
+            <div class="me-auto">
+              <h5 class="mb-1 mt-1">{{ fav.page.name }}</h5>
+              <small class="text-muted">{{ fav.date }}</small>
+            </div>
+            <form method="POST" action="{% url 'user_favorites:unlike_page' fav.page.slug %}"> {% csrf_token %}
+              <button class="btn heart_ratings text-secondary me-2" type="submit"><i class="fa-solid text-danger fa-heart"></i></button>
+            </form>
+            {% if fav.user_rating %}
+            <h4 class="mt-1"><span class="my_rate_badge badge rounded-pill bg-orange">{{ fav.user_rating.rating }}</span></h4>
+            {% else %}
+            <h4 class="mt-1"><span class="my_rate_badge badge rounded-pill bg-secondary">{{ fav.page.average_rating }}</span></h4>
+            {% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

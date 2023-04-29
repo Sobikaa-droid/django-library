@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}{{ page.name }}{% endblock %}
+{% load static %}
+{% block content %}
+{% load widget_tweaks %}
+<div class="container">
+   <div class="page_detail d-flex justify-content-center">
+      <div class='page_detail_info flex-grow-1'>
+         <div class="d-flex">
+            <h1 class="page_title">{{ page.name }}</h1>
+            {% if favorited %} <!-- Unlike page -->
+            <form method="POST" action="{% url 'user_favorites:unlike_page' page.slug %}"> {% csrf_token %}
+               <button class="btn detail_heart text-secondary me-2" type="submit"><i class="fa-solid text-danger fa-heart"></i></button>
+            </form>
+            {% else %} <!-- Like page -->
+            <form method="POST" action="{% url 'user_favorites:like_page' page.slug %}"> {% csrf_token %}
+               <button class="btn detail_heart text-secondary me-2" type="submit"><i class="fa-regular fa-heart"></i></button>
+            </form>
+            {% endif %}
+         </div>
+         <p class="page_description text-secondary lh-base">{{ page.description|striptags|truncatechars:500 }}</p>
+         {% if page.description|length >= 501 %}
+         <p>
+            <a class="btn btn-primary" href="#" role="button" data-bs-toggle="modal" data-bs-target="#modal-show-description">
+            Read Full Description
+            </a>
+         </p>
+         <!-- Modal Show Description -->
+         <div class="modal fade" id="modal-show-description" tabindex="-1" aria-labelledby="DescriptionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="ClearCartModalLabel">Description</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                     <p>{{ page.description }}</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+         {% endif %}
+         <!-- ############ -->
+         <form method="POST" action="{% url 'user_ratings:rate_page' page.slug %}">
+            {% csrf_token %}
+            <div class="rate">
+               <input type="submit" id="star5" name="rating" value="5">
+               <label for="star5" title="Awesome Dog">
+               <i class="fa-solid fa-bone {% if page.average_rating >= 5 %} rate-active {% endif %}"></i>
+               </label>
+               <input type="submit" id="star4" name="rating" value="4">
+               <label for="star4" title="Good Dog">
+               <i class="fa-solid fa-bone {% if page.average_rating >= 4 %} rate-active {% endif %}"></i>
+               </label>
+               <input type="submit" id="star3" name="rating" value="3">
+               <label for="star3" title="Alright Dog">
+               <i class="fa-solid fa-bone {% if page.average_rating >= 3 %} rate-active {% endif %}"></i>
+               </label>
+               <input type="submit" id="star2" name="rating" value="2">
+               <label for="star2" title="Poor Dog">
+               <i class="fa-solid fa-bone {% if page.average_rating >= 2 %} rate-active {% endif %}"></i>
+               </label>
+               <input type="submit" id="star1" name="rating" value="1">
+               <label for="star1" title="Bad Dog">
+               <i class="fa-solid fa-bone {% if page.average_rating >= 1 %} rate-active {% endif %}"></i>
+               </label>
+            </div>
+         </form>
+         <div class="d-flex">
+            <h1><span class="{% if page.average_rating <= 2 %} text-danger {% elif page.average_rating == 3 %} text-dark {% else %} text-success {% endif %} ms-1">{{ page.average_rating }}</span></h1>
+            <small class="text-muted mt-3 ms-2">({{ rating_count }} vote{{ rating_count|pluralize }})</small>
+         </div>
+         {% if user_rating %}
+         <div class="page_my_rate">
+            <h5 class="my_rate_sign me-2">My rating</h5>
+            <h4><span class="my_rate_badge me-2 badge rounded-pill {% if user_rating.rating <= 2 %} bg-danger {% elif user_rating.rating == 3 %} bg-dark {% else %} bg-success {% endif %}">{{ user_rating.rating }}</span></h4>
+            <form method="POST" action="{% url 'user_ratings:delete_rating' page.slug %}"> {% csrf_token %}
+               <button class="btn text-secondary me-2 my_rate_delete" type="submit">Delete</button>
+            </form>
+         </div>
+         {% endif %}
+      </div>
+      <div class="flex-shrink-0 page_detail_image_div">
+         <img class="page_detail_image" src="{{ page.image.url }}">
+      </div>
+   </div>
+   <div class="mb-4">
+      <h1 class="page_other mb-4">Other Dogs</h1>
+      <div class="row row-cols-xxl-5 row-cols-xl-5 row-cols-lg-3 row-cols-md-2 row-cols-sm-2 g-4">
+         {% for page in pages|slice:"0:5" %}
+         <div class="col">
+            <div class="card bg-transparent">
+               <a href="{{ page.get_absolute_url }}" class="card_image_link text-decoration-none">
+               <img src="{{ page.image.url }}" class="card-img-top card_gradient page_detail_other_image">
+               </a>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+   </div>
+</div>
+{% endblock %}

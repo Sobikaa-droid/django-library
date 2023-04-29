@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% load static %}
+{% block content %}
+<div id="banner">
+   <div class="banner_image_home"></div>
+   <h1 class="text-center banner_text banner_home_text text-white user-select-none">Doglib</h1>
+</div>
+<div class="container">
+   <div class="px-4 my-5 text-center">
+      <img class='navbar_logo mb-3' src="{% static 'dog_logo.png' %}" width="80" height="80">
+      <h1 class="display-6 fw-bold">Welcome</h1>
+      <div class="col-lg-6 mx-auto">
+         <p class="lead mb-3 text-secondary">Nunc volutpat risus sed leo egestas, ut ullamcorper lacus molestie. Fusce tincidunt vel magna id porttitor. Aenean quis bibendum nisi. Morbi eleifend lacus id tellus lacinia dignissim.</p>
+         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a type="button" href="{% url 'pages:pages' %}" class="btn btn-lg btn-outline-dark btn-lg px-4 gap-3">See it Yourself</a>
+         </div>
+      </div>
+   </div>
+   <hr class="border border-1 opacity-75 footer_hr">
+   <h2 class="text-center mt-5 text-secondary">Because we offer</h2>
+   <div class="row g-4 mt-4 mb-5 row-cols-1 row-cols-lg-3">
+      <div class="col d-flex align-items-start">
+         <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <h2 class="badge bg-coffee"><i class="fa-brands fa-readme"></i></h2>
+         </div>
+         <div>
+            <h3 class="fs-2">Reading pages</h3>
+            <p class="text-secondary">Cras tincidunt justo elit, at fringilla dui lacinia tincidunt. Integer placerat rhoncus quam, vel pellentesque dolor pulvinar vel. Pellentesque a dictum nunc.</p>
+         </div>
+      </div>
+      <div class="col d-flex align-items-start">
+         <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <h2 class="badge bg-coffee"><i class="fa-solid fa-gem"></i></h2>
+         </div>
+         <div>
+            <h3 class="fs-2">Favoring pages</h3>
+            <p class="text-secondary">Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent id erat accumsan, viverra mi vitae, sollicitudin ligula.</p>
+         </div>
+      </div>
+      <div class="col d-flex align-items-start">
+         <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+            <h2 class="badge bg-coffee"><i class="fa-solid fa-tags"></i></h2>
+         </div>
+         <div>
+            <h3 class="fs-2">Rating pages</h3>
+            <p class="text-secondary">Phasellus fringilla, orci in mattis vehicula, ex sem mattis nunc, aliquet viverra velit tellus vitae lacus. Curabitur lacinia nec urna sed tempor.</p>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}
